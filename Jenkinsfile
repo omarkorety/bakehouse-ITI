@@ -13,7 +13,7 @@ pipeline {
                                 echo ${BUILD_NUMBER}
                                 docker login -u ${USERNAME} -p ${PASSWORD}
                                 docker push omarkorety/bakehouse:${BUILD_NUMBER}
-                                echo ${BUILD_NUMBER} > ../build_num.txt
+                                echo ${BUILD_NUMBER} > ./build_num.txt
                                 """
                     }
                         } else {
