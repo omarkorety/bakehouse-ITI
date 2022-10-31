@@ -15,7 +15,7 @@ pipeline {
                                 docker push omarkorety/bakehouse:${BUILD_NUMBER}
                                 echo ${BUILD_NUMBER} > ../build_num.txt
                                 """
-                    }
+                    
                         } else {
                             echo 'I execute elsewhere'
                         }
