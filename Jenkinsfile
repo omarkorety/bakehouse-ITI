@@ -2,19 +2,18 @@ pipeline {
     agent any
     stages {
         stage('Example Username/Password') {
-            environment {
-                SERVICE_CREDS = credentials('my-predefined-username-password')
-            }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
                 
                 sh """
                     
-                    docker build .  -t ahmedhedihed/bakehouse:$BUILD_NUMBER
+                    docker build .  -t omarkorety/bakehouse:$BUILD_NUMBER
                     docker login -u ${USERNAME} -p ${PASSWORD}
+                    docker push omarkorety/bakehouse:$BUILD_NUMBER
+                    """
                 }
             }
-        }
+        
     
                     
             }
