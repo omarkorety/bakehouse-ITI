@@ -13,11 +13,8 @@ pipeline {
                     """
                 }
             }
-        
-    
-                    
             }
-        }
+        
         stage('CD') {
             steps {
                     
@@ -31,31 +28,13 @@ pipeline {
                        sh """
                             
                             kubectl apply --kubeconfig=${kubecfg} -f Deployment
- 
-                            
-                       
-                       """
-
-                        
-                    
-                }
-                 
-                 
-                 
+                            """
+                }                                                   
             }     
-
-            
-        }         
-   
-
-   
-   
-        
-        
-        
-        
-        
+        }
+    }         
     }
+    
 
    
 
