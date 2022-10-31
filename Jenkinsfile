@@ -4,7 +4,7 @@ ipeline {
         stage('Example Username/Password') {
             steps {
                 script{
-                    if (env.BRANCH_NAME == '') {
+                    if (env.BRANCH_NAME == 'main') {
                         withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
 
                             sh """
