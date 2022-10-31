@@ -1,7 +1,7 @@
 pipeline {
-    agent any
+     agent {label "slave1"}
     stages {
-        stage('build') {
+        stage('BUILD') {
             steps {
                 script{
                     if (env.BRANCH_NAME == 'release') {
@@ -24,7 +24,7 @@ pipeline {
                 }
             }
         
-        stage('CD') {
+        stage('DEPLOY') {
             steps {
                 script{
                      if (env.BRANCH_NAME == 'test' || env.BRANCH_NAME == 'dev'|| env.BRANCH_NAME == 'prod') {
