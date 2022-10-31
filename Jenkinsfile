@@ -1,10 +1,10 @@
 pipeline {
     agent any
     stages {
-        stage('Example Username/Password') {
+        stage('build') {
             steps {
                 script{
-                    if (env.BRANCH_NAME == 'main') {
+                    if (env.BRANCH_NAME == 'release') {
                         withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
 
                             sh """
@@ -13,6 +13,7 @@ pipeline {
                                 echo ${BUILD_NUMBER}
                                 docker login -u ${USERNAME} -p ${PASSWORD}
                                 docker push omarkorety/bakehouse:${BUILD_NUMBER}
+                                echo ${BUILD_NUMBER} > ../build_num.txt
                                 """
                     }
                         } else {
@@ -23,23 +24,31 @@ pipeline {
                 }
             }
         
-//         stage('CD') {
-//             steps {
-                    
-//                  // sh "docker run -d -p 3000:3000 ahmedhedihed/bakehouse:$BUILD_NUMBER"
-                 
-//                 withCredentials([file(credentialsId: '	kubernates_config', variable: 'kubecfg')]){
-//                     // Change context with related namespace
-//                     // sh "kubectl config set-context $(kubectl config current-context)"   // --namespace=${namespace}
+        stage('CD') {
+            steps {
+                script{
+                     if (env.BRANCH_NAME == 'test' || env.BRANCH_NAME == 'dev'|| env.BRANCH_NAME == 'prod') {
 
-//                       // sh 'cat $kubecfg > ~/.kube/config'
-//                        sh """
-                            
-//                             kubectl apply --kubeconfig=${kubecfg} -f Deployment
-//                             """
-//                 }                                                   
-//             }     
-//         }
+
+                        withCredentials([file(credentialsId: 'kubernates_config', variable: 'kubecfg')]){
+                            // sh "kubectl config set-context $(kubectl config current-context)"   // --namespace=${namespace}
+
+                            sh """
+                                export BUILD_NUMBER=$(cat ../build_num.txt)
+                                mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
+                                cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
+                                rm -f Deployment/deploy.yaml.tmp
+                                kubectl apply --kubeconfig=${kubecfg} -f Deployment
+
+                                """
+                }
+                        }else{
+                            echo 'I execute elsewhere'
+                        }
+
+                }                                                   
+            }     
+        }
     }         
     }
     
