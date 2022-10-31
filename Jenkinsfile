@@ -18,15 +18,46 @@ pipeline {
                     
             }
         }
-//         stage('Example SSH Username with private key') {
-//             environment {
-//                 SSH_CREDS = credentials('my-predefined-ssh-creds')
-//             }
-//             steps {
-//                 sh 'echo "SSH private key is located at $SSH_CREDS"'
-//                 sh 'echo "SSH user is $SSH_CREDS_USR"'
-//                 sh 'echo "SSH passphrase is $SSH_CREDS_PSW"'
-//             }
-//         }
+        stage('CD') {
+            steps {
+                    
+                 // sh "docker run -d -p 3000:3000 ahmedhedihed/bakehouse:$BUILD_NUMBER"
+                 
+                withCredentials([file(credentialsId: '	kubernates_config', variable: 'kubecfg')]){
+                    // Change context with related namespace
+                    // sh "kubectl config set-context $(kubectl config current-context)"   // --namespace=${namespace}
+
+                      // sh 'cat $kubecfg > ~/.kube/config'
+                       sh """
+                            
+                            kubectl apply --kubeconfig=${kubecfg} -f Deployment
+ 
+                            
+                       
+                       """
+
+                        
+                    
+                }
+                 
+                 
+                 
+            }     
+
+            
+        }         
+   
+
+   
+   
+        
+        
+        
+        
+        
+    }
+
+    
+ 
     }
 
