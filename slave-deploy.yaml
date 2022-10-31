@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-slave
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins-slave
+  template:
+    metadata:
+      labels:
+        app: jenkins-slave
+    spec:
+      containers:
+      - name: jenkins-slave
+        image: jenkins_slae2
+        imagePullPolicy: Never
+
+        ports:
+          - name: ssh-port
+            containerPort: 22
+          - name: jnlp-port
+            containerPort: 50002
+        volumeMounts:
+          - name: jenkins-slave-vol
+            mountPath: /var/jenkins_vol
+        volumeMounts:
+          - name: docker-sock
+            mountPath: /var/run/docker.sock
+      volumes:
+        - name: jenkins-slave-vol
+          emptyDir: {}
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+
+
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-slave
+spec:
+  type: ClusterIP
+  ports:
+    - port: 22
+      targetPort: 22
+  selector:
+    app: jenkins-slave
