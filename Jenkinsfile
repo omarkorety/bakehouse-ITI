@@ -13,7 +13,7 @@ pipeline {
                                 echo ${BUILD_NUMBER}
                                 docker login -u ${USERNAME} -p ${PASSWORD}
                                 docker push omarkorety/bakehouse:${BUILD_NUMBER}
-                                echo ${BUILD_NUMBER} > ./build_num.txt
+                                echo ${BUILD_NUMBER} > ../build_num.txt
                                 """
                     }
                         } else {
@@ -34,7 +34,7 @@ pipeline {
                             // sh "kubectl config set-context $(kubectl config current-context)"   // --namespace=${namespace}
 
                             sh """
-                                export BUILD_NUMBER=\$(cat ./build_num.txt)
+                                export BUILD_NUMBER=\$(cat ../build_num.txt)
                                 mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
                                 cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
                                 rm -f Deployment/deploy.yaml.tmp
