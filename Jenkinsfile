@@ -29,7 +29,7 @@ pipeline {
                             // sh "kubectl config set-context $(kubectl config current-context)"   // --namespace=${namespace}
 
                             sh """
-                                 gcloud auth activate-service-account --key-file="$serviceAcc"
+                                 gcloud auth activate-service-account --key-file="$test"
                                  gcloud container clusters get-credentials my-gke-cluster --zone asia-east1-a --project omars-project-367822
                                  export BUILD_NUMBER=\$(cat ../build_num.txt)
                                 mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
