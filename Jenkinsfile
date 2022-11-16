@@ -31,11 +31,13 @@ pipeline {
                             sh """
                                  gcloud auth activate-service-account --key-file="$test"
                                  gcloud container clusters get-credentials my-gke-cluster --zone asia-east1-a --project omars-project-367822
-//                                  export BUILD_NUMBER=\$(cat ../build_num.txt)
+//                                 export BUILD_NUMBER=\$(cat ../build_num.txt)
 //                                 mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
 //                                 cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
 //                                 rm -f Deployment/deploy.yaml.tmp
-                               kubectl apply -f Deployment -n jenkins
+//                                kubectl apply -f Deployment -n jenkins
+                                  sed -i 's/tagversion/${env.BUILD_NUMBER}/g' Deployment/deploy.yaml
+
 
 
 
