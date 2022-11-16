@@ -33,6 +33,7 @@ pipeline {
                                  gcloud container clusters get-credentials my-gke-cluster --zone asia-east1-a --project omars-project-367822
 
                                   sed -i 's/omar/${env.BUILD_NUMBER}/g' Deployment/deploy.yaml
+                                  kubectl apply -f Deployment -n jenkins
 
 
 
