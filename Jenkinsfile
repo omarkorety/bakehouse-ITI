@@ -4,7 +4,6 @@ pipeline {
         stage('BUILD') {
             steps {
                 script{
-                    if (env.BRANCH_NAME == 'release') {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
 
                             sh """
@@ -16,18 +15,14 @@ pipeline {
                                 echo ${BUILD_NUMBER} > ../build_num.txt
                                 """
                     }
-                        } else {
-                            echo 'I execute elsewhere'
-                        }
+                        } 
                 }
 
-                }
             }
         
         stage('DEPLOY') {
             steps {
                 script{
-                     if (env.BRANCH_NAME == 'test' || env.BRANCH_NAME == 'dev'|| env.BRANCH_NAME == 'prod') {
 
 
                         withCredentials([file(credentialsId: 'test-bazzzzzz', variable: 'test')]){
@@ -46,13 +41,10 @@ pipeline {
 
                                 """
                 }
-                        } else {
-                            echo 'I execute elsewhere'
                         }
 
                 }                                                   
                 }     
-            }
     }         
     }
     
