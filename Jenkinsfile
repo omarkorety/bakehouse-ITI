@@ -29,6 +29,9 @@ pipeline {
                             // sh "kubectl config set-context $(kubectl config current-context)"   // --namespace=${namespace}
 
                             sh """
+                                  
+                                  gcloud auth activate-service-account --key-file="$test"
+                                  gcloud container clusters get-credentials my-gke-cluster --zone asia-east1-a --project omars-project-367822
                                   sed -i 's/omar/${env.BUILD_NUMBER}/g' Deployment/deploy.yaml
                                   kubectl apply -f Deployment -n jenkins
 
