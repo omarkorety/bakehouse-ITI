@@ -5,7 +5,7 @@ pipeline {
             steps {
                 script{
                     if (env.BRANCH_NAME == 'release') {
-                        withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
 
                             sh """
 
@@ -30,15 +30,19 @@ pipeline {
                      if (env.BRANCH_NAME == 'test' || env.BRANCH_NAME == 'dev'|| env.BRANCH_NAME == 'prod') {
 
 
-                        withCredentials([file(credentialsId: 'kubernates_config', variable: 'kubecfg')]){
+                        withCredentials([file(credentialsId: 'test-bazzzzzz', variable: 'test')]){
                             // sh "kubectl config set-context $(kubectl config current-context)"   // --namespace=${namespace}
 
                             sh """
-                                export BUILD_NUMBER=\$(cat ../build_num.txt)
+                                 gcloud auth activate-service-account --key-file="$serviceAcc"
+                                 gcloud container clusters get-credentials my-gke-cluster --zone asia-east1-a --project omars-project-367822
+                                 export BUILD_NUMBER=\$(cat ../build_num.txt)
                                 mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
                                 cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
                                 rm -f Deployment/deploy.yaml.tmp
-                                kubectl apply --kubeconfig=${kubecfg} -f Deployment
+                               kubectl apply -f Deployment -n jenkins
+
+
 
                                 """
                 }
